@@ -14,21 +14,12 @@ class TestCheckoutValidation:
 
     def _navigate_to_checkout(self, driver, base_url, test_data):
         """Helper to navigate to checkout page"""
+        # Use the same flow as test_checkout_flow.py which works
         LoginPage(driver, base_url).open_login().login(
             test_data["valid"]["username"], test_data["valid"]["password"]
         )
         inv = InventoryPage(driver, base_url)
-        # Add item to cart with multiple retries
-        for attempt in range(3):
-            try:
-                if inv.add_to_cart(test_data["products"][0]):
-                    break
-                time.sleep(1)
-            except:
-                if attempt == 2:
-                    raise
-                time.sleep(1)
-        
+        inv.add_to_cart(test_data["products"][0])
         inv.open_cart()
         CartPage(driver, base_url).checkout()
 

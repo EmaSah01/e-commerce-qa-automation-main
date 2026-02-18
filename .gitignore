@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+
+# Virtual env
+.venv/
+env/
+venv/
+
+# Pytest cache
+.pytest_cache/
+
+# Reports
+reports/
+*.html
+*.xml
+
+# IDE
+.vscode/
+.idea/
+*.iml

@@ -1,0 +1,12 @@
+{
+"valid": { "username": "standard_user", "password": "secret_sauce" },
+"locked": { "username": "locked_out_user", "password": "secret_sauce" },
+"problem": { "username": "problem_user", "password": "secret_sauce" },
+"perf": { "username": "performance_glitch_user", "password": "secret_sauce" },
+"checkout_info": { "first": "Ema", "last": "Tester", "zip": "71000" },
+"products": [
+"Sauce Labs Backpack",
+"Sauce Labs Bike Light",
+"Sauce Labs Bolt T-Shirt"
+]
+}

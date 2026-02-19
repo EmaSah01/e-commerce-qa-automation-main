@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  test-runner:
+    build: .
+    container_name: e-commerce-qa-tests
+    environment:
+      - BASE_URL=${BASE_URL:-https://www.saucedemo.com}
+      - BROWSER=${BROWSER:-chrome}
+      - HEADLESS=${HEADLESS:-true}
+      - IMPLICIT_WAIT=${IMPLICIT_WAIT:-2}
+      - WINDOW_SIZE=${WINDOW_SIZE:-1440,900}
+    volumes:
+      - ./reports:/app/reports
+      - ./screenshots:/app/screenshots
+      - ./src:/app/src
+      - ./tests:/app/tests
+    command: pytest tests/ -v --html=reports/report.html --self-contained-html
+
+  # Optional: Chrome container for Selenium (if needed)
+  chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: e-commerce-chrome
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    environment:
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_TIMEOUT=300
+      - SE_START_XVFB=false
+    volumes:
+      - /dev/shm:/dev/shm
+
+volumes:
+  reports:
+  screenshots:

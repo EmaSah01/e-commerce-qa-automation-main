@@ -1,0 +1,57 @@
+name: Scheduled Full Test Suite
+
+on:
+  schedule:
+    # Run at 2 AM UTC every day
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  full-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run all tests with detailed output
+      run: |
+        pytest tests/ \
+          -v \
+          --html=report.html \
+          --self-contained-html \
+          --tb=short
+
+    - name: Generate test summary
+      if: always()
+      run: |
+        echo "Test run completed on $(date)" >> test_summary.txt
+        pytest tests/ --tb=no -q >> test_summary.txt
+
+    - name: Upload full report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: full-test-report
+        path: |
+          report.html
+          test_summary.txt
+
+    - name: Send notification
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: 'Full test suite failed on scheduled run'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      continue-on-error: true
